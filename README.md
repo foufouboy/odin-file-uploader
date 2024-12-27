@@ -1,17 +1,23 @@
-# Express base template
+# TOP File Uploader Project
 
-This repo serves as a base template for my express apps, using Pug for the front part. It mainly focus on providing
-a MVC folder structure, setting-up default files that will always be used, and the libraries/frameworks that I will use.
-It includes, for example, utilities for authentication (passport-js), form validation (express-validation), and various useful dev
-dependancies. 
-
-This rep will be updated regularly to better fit my needs.
-
-### Main used technologies :
+## Using :
+(mainly)
+- HTML/CSS/JS
 - Typescript
-- Tailwind
-- Pug
-- Express
-- PostgreSQL
+- Passport
 - Prisma ORM
-- NodeJS
+- Tailwind
+- Express
+- PostgresSQL
+- Pug
+
+## Goal :
+Creating a simple and clean multi-page app where users can authenticate, upload and manage files in a folder-based system.
+
+This project serves as a full-stack app to train all of what we learnt so far in the NodeJS part of the course; at this point I added Tailwind, Typescript and Prisma ORM to the stack, so I'll practice that, and Passport which I've not yet put my head all around.
+
+I'll try to make that app efficiently and cleanly, separating the front from the back, commiting regularly, and defining my tasks to know where I start and when I finish in my code sessions.
+
+## Design
+
+No design yet.
