@@ -4,6 +4,9 @@ const router = Router();
 const mockResponse = (req, res, next) => {
     res.json({status: 200, message: "Everything working!"});
 }
+const mockBadResponse = (req, res, next) => {
+    res.json({status: 400, message: "You're on a bad route"});
+}
 
 // GET
 
@@ -32,5 +35,9 @@ router.put("/profile", mockResponse);
 router.delete("/folders/:folder_id", mockResponse);
 router.delete("/folders/:folder_id/files/:file_id", mockResponse);
 router.delete("/profile", mockResponse);
+
+// MOCK ERROR HANDLING 
+
+router.all("*", mockBadResponse);
 
 export default router;
