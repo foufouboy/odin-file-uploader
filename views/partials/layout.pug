@@ -1,0 +1,13 @@
+doctype html
+html
+    head
+        title Express base template
+        meta(charset="utf-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="/styles/output.css")
+        script(src="/scripts/index.js" defer)
+        block scripts
+    body(class="flex flex-col h-dvh justify-center items-center")
+        header
+        block content
+        footer
