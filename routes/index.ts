@@ -1,14 +1,11 @@
 import { Router } from "express";
+import createError from "http-errors";
 import index from "../controllers";
 import user from "../controllers/user";
 import folder from "../controllers/folder";
 import file from "../controllers/file";
 
 const router = Router();
-
-const mockBadResponse = (req, res, next) => {
-    res.json({status: 400, message: "You're on a bad route"});
-}
 
 // GET
 
@@ -40,6 +37,8 @@ router.delete("/profile", user.profile.delete);
 
 // MOCK ERROR HANDLING 
 
-router.all("*", mockBadResponse);
+router.all("*", (req, res, next) => {
+    return next(createError(404, "This path does not exist!"));
+});
 
 export default router;
