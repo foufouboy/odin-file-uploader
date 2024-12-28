@@ -22,6 +22,7 @@ model User {
   email        String   @unique
   passwordHash String
   createdAt    DateTime @default(now())
+  avatarLink   String?
   folders      Folder[]
 
   @@map("user")
