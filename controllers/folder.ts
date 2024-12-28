@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 
 const folder = {
     get: asyncHandler(async (req, res) => {
-        // On va chercher le dossier, et on l'affiche,
+        // On va chercher le dossier, ses fichiers, et on les affiche,
         // (donc : on a besoin des données du folder)
         res.json({ 
             status: 200,
