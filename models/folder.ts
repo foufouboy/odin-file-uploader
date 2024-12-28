@@ -42,12 +42,4 @@ const folderModel = {
     }
 };
 
-const main = async () => {
-    const folder = await folderModel.getWithContent("8938c37b-fd0c-486b-8293-58777ab4f361");
-
-    console.log(folder);
-}
-
-main();
-
 export default folderModel;

@@ -32,6 +32,4 @@ const fileModel = {
     }
 };
 
-fileModel.create("Another file", "1mb", "Another link", "1e7ad927-ae74-404e-af4f-ab0c56b5c232");
-
 export default fileModel;
