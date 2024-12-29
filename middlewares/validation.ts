@@ -103,3 +103,11 @@ const folderNameValidation =
         .isLength({min: 3, max: 30})
         .withMessage(`Folder name ${namingSizeError}`)
         .escape();
+
+export {
+    profileValidation,
+    avatarValidation,
+    fileUploadValidation,
+    fileRenamingValidation,
+    folderNameValidation,
+};
