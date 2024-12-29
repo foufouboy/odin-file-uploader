@@ -35,7 +35,7 @@ router.delete("/folders/:folder_id", folder.delete);
 router.delete("/folders/:folder_id/files/:file_id", file.delete);
 router.delete("/profile", user.profile.delete);
 
-// MOCK ERROR HANDLING 
+// 404 ERROR HANDLING 
 
 router.all("*", (req, res, next) => {
     return next(createError(404, "This path does not exist!"));
