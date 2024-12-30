@@ -1,4 +1,8 @@
 import asyncHandler from "express-async-handler";
+import passport from "passport";
+import bcrypt from "bcryptjs";
+import userModel from "../models/user";
+import createError from "http-errors";
 
 const user = {
     signup: {
@@ -11,14 +15,27 @@ const user = {
             });
         },
 
-        post: asyncHandler(async (req, res) => {
-            // On crée un user,
-            // on dit qu'il peut maintenant se connecter
-            // (ou on redirect vers login)
-            res.json({
-                status: 200,
-                message: "A user has been successfully created",
-            });
+        post: asyncHandler(async (req, res, next) => {
+            const {
+                username,
+                email,
+                password,
+            } = req.body;
+
+            try {
+                const pwHash = await bcrypt.hash(req.body.password, 10);
+                const user = await userModel.create(username, email, pwHash, "");
+
+                res.json({
+                    status: 200,
+                    message: "user successfully created!",
+                    user: user,
+                });
+
+            } catch (err) {
+                console.error(err);
+                return next(createError(500, err));
+            }
         }),
     },
 
@@ -26,19 +43,24 @@ const user = {
 
         get: (req, res, next) => {
             // On render juste la page login
-            res.json({
-                status: 200,
-                message: "login page",
-            });
+            if (req.user) {
+                res.json({
+                    status: 200,
+                    message: "already logged in",
+                    user: req.user,
+                })
+            } else {
+                res.json({
+                    status: 200,
+                    message: "login page",
+                });
+            }
         },
 
-        post: (req, res, next) => {
-            // passport.authenticate
-            res.json({
-                status: 200,
-                message: "A user has been successfully authenticated",
-            });
-        }
+        post: passport.authenticate("local", {
+            successRedirect: "/login",
+            failureRedirect: "/login",
+        }),
     },
 
     logout: (req, res, next) => {

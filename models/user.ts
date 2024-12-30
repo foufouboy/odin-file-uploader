@@ -2,6 +2,15 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const userModel = {
+
+    getFromUname: async (uname: string) => {
+        const user = await prisma.user.findUnique({
+            where: {username: uname}
+        });
+
+        return user;
+    },
+
     getWithContent: async (id: string) => {
         const user = await prisma.user.findUnique({
             where: {id: id}
@@ -50,7 +59,5 @@ const userModel = {
         return response;
     },
 };
-
-userModel.create("Milocibelle", "milo@cibelle.plouf", "une_petite_fee", "");
 
 export default userModel;
