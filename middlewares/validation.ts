@@ -1,4 +1,7 @@
 import { body } from "express-validator";
+import userModel from "../models/user";
+import fileModel from "../models/file";
+import { imageExists } from "./supabase";
 
 const namingSizeError = "should be between 3 and 30 characters."
 const unameFormatError = "should begin by a letter, and then only use alphanumeric characters, hyphens and underscores";
@@ -17,13 +20,31 @@ const profileValidation = [
         .trim()
         .isLength({min: 3, max: 30})
         .withMessage(`Username ${namingSizeError}`)
-        .matches(/[a-zA-Z][a-zA-Z1-9-_]+/)
+        .matches(/^[a-zA-Z][a-zA-Z1-9-_]+$/)
         .withMessage(unameFormatError)
+        .custom(async (uname, { req }) => {
+            if (req.user && req.user.username === uname) return true;
+
+            const user = await userModel.getFromUname(uname);
+            if (user) {
+                throw new Error("This username already exists");
+            }
+        })
+        .withMessage("This username already exists")
         .escape(),
     body("email")
         .trim()
         .isEmail()
         .withMessage("Invalid email.")
+        .custom(async (email, { req }) => {
+            if (req.user && req.user.email === email) return true;
+
+            const user = await userModel.getFromEmail(email);
+            if (user) {
+                throw new Error("This email already exists");
+            }
+        })
+        .withMessage("This email already exists")
         .escape(),
     body("password")
         .trim()
@@ -44,10 +65,12 @@ const profileValidation = [
 
 const avatarValidation = 
     body("avatar")
-        .custom((_, { req }) => {
+        .optional()
+        .custom(async (_, { req }) => {
             if (!req.file) return true;
 
             const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+            const alreadyExists = await imageExists("avatars", req.file.originalname);
             if (!allowedTypes.includes(req.file.mimetype)) {
                 return false;
             }
@@ -56,9 +79,13 @@ const avatarValidation =
                 return false;
             }
 
+            if (alreadyExists) {
+                return false;
+            };
+
             return true;
         })
-        .withMessage("Avatar is not valid! (Either too large or not an image)");
+        .withMessage("Avatar is not valid! (Either too large, not an image, or same image!)");
 
 
 // FILE UPLOAD VALIDATION
@@ -68,16 +95,19 @@ const avatarValidation =
 
 const fileUploadValidation = 
     body("upload-file")
-        .custom((_, { req }) => {
+        .custom(async (_, { req }) => {
             if (!req.file) return false;
 
-            if (req.file.size > 5 * 1024 * 1024) {// 5mb
-                return false;
-            }
+            if (req.file.size > 5 * 1024 * 1024) return false;
+
+            const fileExisting = await fileModel
+                .isFileInFolder(req.file.originalname, req.params.folder_id);
+
+            if (fileExisting) return false;
 
             return true;
         })
-        .withMessage("File is not valid! (Either too large or non existent)");
+        .withMessage("File is not valid! (Either too large, non existent, or already existing)");
 
 // FILE RENAMING VALIDATION
 /*
@@ -86,7 +116,7 @@ const fileUploadValidation =
 */
 
 const fileRenamingValidation = 
-    body("folder-name")
+    body("file-name")
         .trim()
         .isLength({min: 3, max: 30})
         .withMessage(`Folder name ${namingSizeError}`)

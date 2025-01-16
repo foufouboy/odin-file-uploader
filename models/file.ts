@@ -29,6 +29,17 @@ const fileModel = {
         const response = await prisma.file.delete({ where: { id: id } });
         
         return response;
+    },
+
+    isFileInFolder: async (fileName: string, folderId: string) => {
+        const file = await prisma.file.findFirst({
+            where: {
+                name: fileName,
+                folderId: folderId,
+            }
+        });
+
+        return file;
     }
 };
 

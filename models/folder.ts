@@ -2,6 +2,19 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const folderModel = {
+    getRootFolder: async (userId: string) => {
+        const folder = await prisma.folder.findUnique({
+            where: {
+                name_userId: {
+                    name: `root-${userId}`,
+                    userId: userId,
+                }
+            }
+        });
+
+        return folder;
+    },
+
     getWithContent: async (id: string) => {
         const folder = await prisma.folder.findUnique({
             where: { id: id },
@@ -22,6 +35,15 @@ const folderModel = {
         }});
 
         return newFolder;
+    },
+
+    createRootFolder: async (userId: string) => {
+        const rootFolder = await prisma.folder.create({ data: {
+            name: `root-${userId}`,
+            userId: userId,
+        }});
+
+        return rootFolder;
     },
 
     update: async (id: string, name: string, parentId: string) => {

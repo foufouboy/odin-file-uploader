@@ -11,6 +11,14 @@ const userModel = {
         return user;
     },
 
+    getFromEmail: async (email: string) => {
+        const user = await prisma.user.findUnique({
+            where: {email: email}
+        });
+
+        return user;
+    },
+
     getWithContent: async (id: string) => {
         const user = await prisma.user.findUnique({
             where: {id: id}
@@ -59,5 +67,12 @@ const userModel = {
         return response;
     },
 };
+
+async function main() {
+
+    const user = await userModel.getWithContent("jlkqfsd");
+    console.log(user);
+
+}
 
 export default userModel;
