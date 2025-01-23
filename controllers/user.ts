@@ -60,10 +60,7 @@ const user = {
 
         get: (req, res, next) => {
             // On render juste la page login
-            res.json({
-                status: 200,
-                message: "login page",
-            });
+            res.render("pages/login");
         },
 
         post: passport.authenticate("local", {
@@ -99,6 +96,7 @@ const user = {
                 // On opère juste les changements
                 // ou bien avatar, nom, ou mot de passe (pq pas)
                 // on redirect vers le profil
+                // TODO: Supprimer l'avatar précédent de Supabase
 
                 const errors = validationResult(req);
 

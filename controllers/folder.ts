@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import folderModel from "../models/folder";
 import createError from "http-errors";
 import { validationResult } from "express-validator";
+import { folderNameValidation } from "../middlewares/validation";
 
 const folder = {
     get: asyncHandler(async (req, res) => {
@@ -17,61 +18,66 @@ const folder = {
         });
     }),
 
-    create: asyncHandler(async (req, res) => {
-        // On valide le nom du dossier,
-        // on le crée dans Folder. 
-        // On redirect vers la page du dossier parent
+    create: [
+        folderNameValidation,
+        asyncHandler(async (req, res) => {
 
-        const errors = validationResult(req);
-        const folderId = req.params.folder_id;
+            const errors = validationResult(req);
+            const folderId = req.params.folder_id;
 
-        if (!errors.isEmpty()) {
-            res.status(400).json({
-                status: 400,
-                errors: errors.array(),
-                redirect: `/folders/${req.params.folder_id}`,
-            });
-        } else {
-            const { name } = req.body;
-            const newFolder = await folderModel.create(name, folderId, req.user.id);
+            if (!errors.isEmpty()) {
+                res.status(400).json({
+                    status: 400,
+                    errors: errors.array(),
+                    redirect: `/folders/${req.params.folder_id}`,
+                });
+            } else {
+                const { name } = req.body;
+                const newFolder = await folderModel.create(name, folderId, req.user.id);
 
-            res.json({ 
-                status: 200,
-                message: "Folder created successfully",
-                folder: newFolder,
-            });
-        }
+                res.json({ 
+                    status: 200,
+                    message: "Folder created successfully",
+                    folder: newFolder,
+                });
+            }
+        }),
+    ],
 
-    }),
+    update: [
+        folderNameValidation,
+        asyncHandler(async (req, res) => {
 
-    update: asyncHandler(async (req, res) => {
-        // On renomme le dossier
-        // On redirect vers la page du dossier parent
-        // 
-        const errors = validationResult(req);
-        const folderId = req.params.folder_id;
+            // getting validation errors
 
-        if (!errors.isEmpty()) {
-            res.status(400).json({
-                status: 400,
-                errors: errors.array(),
-                redirect: `/folders/${req.params.folder_id}`,
-            });
-        } else {
-            const { name, parentId } = req.body;
-            const updatedFolder = await folderModel.update(folderId, name, parentId);
+            const errors = validationResult(req);
+            const folderId = req.params.folder_id;
 
-            res.json({ 
-                status: 200,
-                message: "Folder created successfully",
-                folder: updatedFolder,
-            });
-        }
-    }),
+            if (!errors.isEmpty()) {
+                res.status(400).json({
+                    status: 400,
+                    errors: errors.array(),
+                    redirect: `/folders/${req.params.folder_id}`,
+                });
+            } else {
+
+                // updating
+
+                const { name, parentId } = req.body;
+                const updatedFolder = await folderModel.update(folderId, name, parentId);
+
+                // returning
+
+                res.json({ 
+                    status: 200,
+                    message: "Folder created successfully",
+                    folder: updatedFolder,
+                });
+            }
+        }),
+    ],
 
     delete: asyncHandler(async (req, res) => {
-        // On supprime le dossier
-        // On redirect vers la page du dossier parent
 
         await folderModel.delete(req.params.folder_id);
 
