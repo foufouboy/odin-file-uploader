@@ -16,7 +16,7 @@ block content
                     input(
                         type="text" 
                         name="username" 
-                        class="border border-solid border-gray-300 rounded-md mb-5 px-2 py-1 focus:outline focus focus:outline-purple focus:outline-2 focus:outline-offset-[-1px]"
+                        class="input-primary mb-5"
                         required
                     )
                 
@@ -25,12 +25,11 @@ block content
                     input(
                         type="text" 
                         name="password"
-                        class="border border-solid border-gray-300 rounded-md w-full px-2 py-1 focus:outline focus focus:outline-purple focus:outline-2 focus:outline-offset-[-1px]"
+                        class="input-primary"
                         required
                     )
 
             
-            button(class="rounded-md bg-purple text-white flex-grow w-full text-[1rem] font-semibold p-2 hover:bg-purple-dark transition") Sign in 
-
+            button(class="btn-primary") Sign in 
             p Not a member? 
                 a(href="/register" class="text-purple font-semibold hover:text-purple-dark transition") Register

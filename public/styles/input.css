@@ -4,7 +4,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS IMPORTS */
+@layer components {
+    .btn-primary {
+        @apply 
+            rounded-md
+            bg-purple 
+            text-white 
+            flex-grow 
+            w-full 
+            text-[1rem] 
+            font-semibold 
+            p-2 
+            hover:bg-purple-dark 
+            transition;
+    }
+
+    .input-primary {
+        @apply
+            border 
+            border-solid 
+            border-gray-300 
+            rounded-md 
+            px-2 py-1 
+            focus:outline 
+            focus:outline-purple 
+            focus:outline-2 
+            focus:outline-offset-[-1px];
+    }
+}
 
 /* DESIGN */
 
